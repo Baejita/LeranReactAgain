@@ -5,10 +5,6 @@ function PostList() {
   const posts = useLoaderData();
   //เราไม่มสามารถสร้าง asyn await ตรงฟังชั่นหลักได้ ต้องใช้ useEffect ในการห่อ
 
-  function addPostHandler(postData) {
-   
-    setPosts((existingPosts) => [postData, ...existingPosts]);
-  }
   //ใช้ exsting => ในกรณีที่ขึ้นอยู่กับสถานะเก่า
 
   //มีอยู่สามวิธีในการสร้างเงื่อนไขคึือ 1 if 2. tertinary operations 3. ใช้ &&
@@ -16,8 +12,13 @@ function PostList() {
     <>
       {posts.length > 0 && (
         <ul className={classes.posts}>
-          {posts.map((post, i) => (
-            <Post author={post.author} key={i} body={post.body} />
+          {posts.map((post) => (
+            <Post
+              author={post.author}
+              key={post.id}
+              id={post.id}
+              body={post.body}
+            />
           ))}
         </ul>
       )}
