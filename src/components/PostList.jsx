@@ -1,12 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewPost from "./NewPost";
 import Post from "./Post";
 import classes from "./PostList.module.css";
 import Modal from "./Modal";
 function PostList({ isPosting, onStopPosting }) {
   const [posts, setPosts] = useState([]);
+  //เราไม่มสามารถสร้าง asyn await ตรงฟังชั่นหลักได้ ต้องใช้ useEffect ในการห่อ
+
+  useEffect(() => {
+    async function getPost() {
+      const response = await fetch("http://localhost:8080/posts");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(data.posts);
+      setPosts(data.posts);
+    }
+    getPost();
+  }, []);
 
   function addPostHandler(postData) {
+    fetch("http://localhost:8080/posts", {
+      method: "POST",
+      body: JSON.stringify(postData),
+      headers: { "Content-Type": "application/json" },
+    });
+
     setPosts((existingPosts) => [postData, ...existingPosts]);
   }
   //ใช้ exsting => ในกรณีที่ขึ้นอยู่กับสถานะเก่า
